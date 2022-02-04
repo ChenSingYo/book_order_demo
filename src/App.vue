@@ -41,7 +41,7 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
-  padding: 2rem 5rem;
+  padding: 2rem 3rem;
 }
 
 .el-tabs {
@@ -99,6 +99,16 @@ export default {
   border-color: white !important;
 }
 /* bug: checkbox disabled狀態無法取消，得用css強制改寫 */
+
+
+.el-table__footer-wrapper {
+  font-weight: bolder;
+}
+
+.el-table__inner-wrapper {
+    padding: 3.5rem 0 0 0;
+}
+
 
 @media screen and (max-width: 576px) {
   #app {
