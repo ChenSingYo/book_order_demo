@@ -1,17 +1,21 @@
 <template>
   <div class="search_input">
-    <el-input v-model="search" placeholder="Type to search" input-style="border-color: #909399;" />
+    <el-input
+      v-model="search"
+      placeholder="Type to search"
+      input-style="border-color: #909399;"
+    />
   </div>
 
-  <el-table show-summary :summary-method="getSummaries" :data="filterTableData">
+  <el-table show-summary :summary-method="getSummaries" :data="itemSelected">
     <el-table-column
       label="Item Id"
       prop="itemId"
       align="center"
-      min-width="50"
+      min-width="80"
       max-width="100"
     />
-    <el-table-column label="Title" prop="title" align="left" />
+    <el-table-column label="Title" prop="title" align="left" min-width="100" />
     <el-table-column type="expand" align="center" width="70">
       <template #header> Detail </template>
       <template #default="props">
@@ -22,11 +26,15 @@
         </ul>
       </template>
     </el-table-column>
-    <el-table-column label="Quantity" align="center" width="150">
+    <el-table-column
+      label="Quantity"
+      align="center"
+      width="150"
+      prop="orderQuantity"
+    >
       <template #default="props">
         <el-input-number
           v-model="props.row.orderQuantity"
-          @change="handleEditQuantity"
           :min="0"
           :max="100"
           controls-position="right"
@@ -34,11 +42,16 @@
         ></el-input-number>
       </template>
     </el-table-column>
-    <el-table-column align="center" max-width="200" min-width="60" prop="price">
+    <el-table-column
+      align="center"
+      max-width="200"
+      min-width="100"
+      prop="price"
+    >
       <template #header> Price (NT$) </template>
       <template #default="props">{{ props.row.price }} </template>
     </el-table-column>
-    <el-table-column align="center" max-width="150" min-width="100">
+    <el-table-column align="center" max-width="150" min-width="120">
       <template #header> Subtotal (NT$) </template>
       <template #default="props">
         <h4>{{ props.row.orderQuantity * props.row.price }}</h4>
@@ -58,8 +71,12 @@
 
 <script setup>
 import { ref, computed } from 'vue'
+const emit = defineEmits(['setOrder'])
 
 const totalCost = ref(0)
+
+let itemSelected = ref([])
+
 const tableData = [
   {
     itemId: 'B001',
@@ -71,6 +88,7 @@ const tableData = [
       desc: 'pulp fiction',
       materialGroup: 'A01',
     },
+    timeStamp: '',
   },
   {
     itemId: 'B002',
@@ -82,6 +100,7 @@ const tableData = [
       desc: 'movie script',
       materialGroup: 'A02',
     },
+    timeStamp: '',
   },
   {
     itemId: 'B003',
@@ -93,6 +112,7 @@ const tableData = [
       desc: 'movie script',
       materialGroup: 'A03',
     },
+    timeStamp: '',
   },
   {
     itemId: 'B004',
@@ -104,36 +124,50 @@ const tableData = [
       desc: 'Holy Bible',
       materialGroup: 'A04',
     },
+    timeStamp: '',
   },
 ]
 
 const search = ref('')
 
-const filterTableData = computed(() =>
+itemSelected = computed(() =>
   tableData.filter(
     (data) =>
       !search.value ||
       data.title.toLowerCase().includes(search.value.toLowerCase())
   )
 )
-const handleEditQuantity = (newVal, oldVal) => {
-  console.log(newVal, oldVal)
-}
 
 const handleSendOrder = () => {
-  let itemSelected = filterTableData.value.filter(
+  const orderTime = new Date()
+  let showItemOrdered = []
+  let itemOrdered = itemSelected.value.filter(
     (item) => item.orderQuantity !== 0
   )
 
-  let showItemSelected = []
-  itemSelected.forEach(
-    (item) =>
-      (showItemSelected +=
-        '品名：' + item.title + ', 數量：' + item.orderQuantity + '\n')
-  )
+  // console.log('tableData@Order:', tableData)
+  // console.log('itemSelected@OrderVue:', itemSelected.value)
+  // console.log('itemOrdered:', itemOrdered)
+
+  emit('setOrder', itemOrdered)
+
+  itemOrdered.map((item) => {
+    showItemOrdered +=
+      '品名：' + item.title + ', 數量：' + item.orderQuantity + '\n'
+    item.timeStamp = orderTime.toLocaleString()
+  })
+
   alert(
-    '要下單的品項：\n' + showItemSelected + '\n 訂單總額：' + totalCost.value
+    '要下單的品項：\n' +
+      showItemOrdered +
+      '\n 訂單總額：' +
+      totalCost.value +
+      '\n 下單時間：' +
+      orderTime.toLocaleString()
   )
+
+  search.value = ''
+  // tableData.forEach((item) => (item.orderQuantity = 0))
 }
 
 const getSummaries = (param) => {
@@ -165,7 +199,7 @@ const getSummaries = (param) => {
 }
 .table_footer {
   display: flex;
-  margin-top: 2rem;
+  margin-top: 1rem;
   padding: 1rem;
 }
 button.el-button.order_btn {

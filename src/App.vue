@@ -1,11 +1,11 @@
 <template>
   <h1>Book Order UI Demo</h1>
-  <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
+  <el-tabs v-model="activeName" type="card">
     <el-tab-pane label="下單" name="Order">
-      <Order />
+      <Order @setOrder="setItemOrdered"/>
     </el-tab-pane>
     <el-tab-pane label="訂單紀錄" name="OrderHistory">
-      <OrderHistory />
+      <OrderHistory :itemOrdered="itemOrdered" />
     </el-tab-pane>
   </el-tabs>
 </template>
@@ -21,13 +21,17 @@ export default {
     Order,
   },
   setup() {
-    const activeName = ref('Order')
-    const handleClick = (tab, event) => {
-      console.log(tab.props.label)
+    const activeName = ref('OrderHistory')
+    const itemOrdered = ref([])
+    const setItemOrdered = (items) => {
+      console.log('itemBeingSet:', items)
+      itemOrdered.value = items
     }
+
     return {
       activeName,
-      handleClick,
+      itemOrdered,
+      setItemOrdered
     }
   },
 }
