@@ -108,7 +108,7 @@ let tableData = ref([
       desc: 'movie script',
       materialGroup: 'A02',
     },
-    timeStamp: '2022/1/1',
+    timeStamp: '2022/1/2',
   },
   {
     itemId: 'B003',
@@ -120,7 +120,7 @@ let tableData = ref([
       desc: 'movie script',
       materialGroup: 'A03',
     },
-    timeStamp: '2022/1/2',
+    timeStamp: '2022/1/3',
   },
   {
     itemId: 'B004',
@@ -132,7 +132,7 @@ let tableData = ref([
       desc: 'Holy Bible',
       materialGroup: 'A04',
     },
-    timeStamp: '2022/1/2',
+    timeStamp: '2022/1/4',
   },
 ])
 
@@ -179,18 +179,17 @@ const deleteOrderRecord = (selection) => {
 
   tableData.value = tableData.value.filter((item) => {
     if (
-      selection.filter(
+      selection.some(
         (selcItem) =>
-          selcItem.timeStamp !== item.timeStamp ||
-          selcItem.itemId !== item.itemId
-      ).length > 0
+          selcItem.timeStamp === item.timeStamp &&
+          selcItem.title === item.title && selcItem.itemId === item.itemId && selcItem.orderQuantity === item.orderQuantity
+      )
     ) {
-      return true
-    } else {
       return false
+    } else {
+      return true
     }
   })
-  console.log(tableData.value)
 }
 </script>
 

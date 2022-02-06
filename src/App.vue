@@ -21,7 +21,7 @@ export default {
     Order,
   },
   setup() {
-    const activeName = ref('OrderHistory')
+    const activeName = ref('Order')
     const itemOrdered = ref([])
     const setItemOrdered = (items) => {
       console.log('itemBeingSet:', items)
