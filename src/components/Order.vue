@@ -167,7 +167,6 @@ const handleSendOrder = () => {
   )
 
   search.value = ''
-  // tableData.forEach((item) => (item.orderQuantity = 0))
 }
 
 const getSummaries = (param) => {

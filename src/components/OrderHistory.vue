@@ -182,7 +182,9 @@ const deleteOrderRecord = (selection) => {
       selection.some(
         (selcItem) =>
           selcItem.timeStamp === item.timeStamp &&
-          selcItem.title === item.title && selcItem.itemId === item.itemId && selcItem.orderQuantity === item.orderQuantity
+          selcItem.title === item.title &&
+          selcItem.itemId === item.itemId &&
+          selcItem.orderQuantity === item.orderQuantity
       )
     ) {
       return false
